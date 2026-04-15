@@ -143,3 +143,7 @@ func LoadConfig(c interface{}) error
 ## Developer
 
 Developed by [barluscuda](https://github.com/barluscuda).
+
+## License
+
+This project is licensed under the MIT License. See [LICENSE](/home/mrbarlus/projects/dexconfig/LICENSE) for details.
