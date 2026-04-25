@@ -92,6 +92,10 @@ func loadStruct(v reflect.Value, o *options) error {
 			continue
 		}
 
+		if fieldType.Tag.Get(o.tagName+"required") == "true" {
+			info.required = true
+		}
+
 		key := info.key
 		if o.prefix != "" && key != "" {
 			key = o.prefix + "_" + key
@@ -119,7 +123,7 @@ func loadStruct(v reflect.Value, o *options) error {
 func parseTag(tag string) tagInfo {
 	info := tagInfo{}
 
-	parts := strings.SplitN(tag, ":", 2)
+	parts := strings.SplitN(tag, "=", 2)
 	info.key = strings.TrimSpace(parts[0])
 
 	if info.key == "-" {
@@ -128,18 +132,8 @@ func parseTag(tag string) tagInfo {
 	}
 
 	if len(parts) > 1 {
-		rest := parts[1]
-		if idx := strings.Index(rest, ";required"); idx >= 0 {
-			info.required = true
-			rest = rest[:idx] + rest[idx+len(";required"):]
-		} else if rest == "required" {
-			info.required = true
-			rest = ""
-		}
-		if rest != "" || strings.Contains(parts[1], ":") {
-			info.def = rest
-			info.hasDef = true
-		}
+		info.def = parts[1]
+		info.hasDef = true
 	}
 	return info
 }

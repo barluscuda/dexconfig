@@ -8,26 +8,26 @@ import (
 )
 
 type DBConfig struct {
-	Host string `env:"DB_HOST:localhost"`
-	Port int    `env:"DB_PORT:5432"`
+	Host string `env:"DB_HOST=localhost"`
+	Port int    `env:"DB_PORT=5432"`
 }
 
 type TLSConfig struct {
-	Enabled bool `env:"TLS_ENABLED:false"`
+	Enabled bool `env:"TLS_ENABLED=false"`
 }
 
 type FullConfig struct {
-	Name    string            `env:"APP_NAME:dexconfig"`
-	Debug   bool              `env:"APP_DEBUG:false"`
-	Timeout time.Duration     `env:"APP_TIMEOUT:5s"`
-	Secret  string            `env:"APP_SECRET:;required"`
+	Name    string            `env:"APP_NAME=dexconfig"`
+	Debug   bool              `env:"APP_DEBUG=false"`
+	Timeout time.Duration     `env:"APP_TIMEOUT=5s"`
+	Secret  string            `env:"APP_SECRET" envrequired:"true"`
 	Tags    []string          `env:"APP_TAGS"`
 	Ports   []int             `env:"APP_PORTS"`
 	Labels  map[string]string `env:"APP_LABELS"`
 	Addr    netip.Addr        `env:"APP_ADDR"`
 	When    time.Time         `env:"APP_WHEN"`
-	Ratio   float64           `env:"APP_RATIO:0.5"`
-	Retries uint32            `env:"APP_RETRIES:3"`
+	Ratio   float64           `env:"APP_RATIO=0.5"`
+	Retries uint32            `env:"APP_RETRIES=3"`
 	Skipped string            `env:"-"`
 	DB      DBConfig
 	TLS     *TLSConfig
@@ -112,7 +112,7 @@ func TestLoadConfig_Required(t *testing.T) {
 
 func TestLoadConfig_Prefix(t *testing.T) {
 	type C struct {
-		Host string `env:"HOST:default"`
+		Host string `env:"HOST=default"`
 	}
 	var c C
 	err := LoadConfig(&c, WithPrefix("MYAPP"), WithLookup(staticEnv(map[string]string{
